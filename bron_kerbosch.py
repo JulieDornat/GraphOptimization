@@ -2,10 +2,21 @@ from graphe import graphe
 import random
 
 def bron_kerbosch1(G: graphe, K: list, C: list):
+    """ 
+    Renvoie la plus grande amelioration possible d'une clique donnée par l'algorithme de braun-kerbosch
+
+    Args:
+        graphe G:   le graphe dans lequel chercher la clique
+        str list K: liste des points d'une clique deja trouvée
+        str list C: liste des voisins communs de tous les points de K
+    
+    Return: 
+        str list: la liste des points de la plus grande clique trouvée
+    """
     if not C:
         return K 
     else:
-        res = []
+        res = [K]
         for x in C:
             voisins = G.edges[x]
             inter = [e for e in C if e in voisins] # on calcule C inter gamma(x)
@@ -13,9 +24,21 @@ def bron_kerbosch1(G: graphe, K: list, C: list):
         return max(res, key=len) # on renvoie la plus grande des cliques maximales trouvées
 
 def bron_kerbosch2(G: graphe, K: list, C: list, A:list):
+    """ 
+    Renvoie la plus grande amelioration possible d'une clique donnée par la version améliorée de l'algorithme de braun-kerbosch
+
+    Args:
+        graphe G:   le graphe dans lequel chercher la clique
+        str list K: liste des points d'une clique deja trouvée
+        str list C: liste des voisins communs de tous les points de K
+        str list A: sous ensemble de C des points encore possibles d'ajouter a la clique
+    
+    Return: 
+        str list: la liste des points de la plus grande clique trouvée
+    """
     if not C:
         return K
-    res = []
+    res = [K]
     while A:
         x = random.choice(A)
         voisins = G.edges[x]
@@ -25,25 +48,25 @@ def bron_kerbosch2(G: graphe, K: list, C: list, A:list):
         A.remove(x)
     return max(res, key=len) # on renvoie la plus grande des cliques maximales trouvées
 
-def clique3(G: graphe):
-    l = sorted(G.nodes, key=lambda x: len(G.edges[x]), reverse=True)
-    for x in range(len(l)):
-        for y in range(x+1, len(l)):
-            for z in range(y+1, len(l)):
-                if l[x] in [e for e in G.edges[l[y]] if e in G.edges[l[z]]]:
-                    return [l[x], l[y], l[z]]
-    return []
+def bron_kerbosch(G: graphe, K: list, ameliore: bool):
+    """
+    Renvoie la plus grande amelioration possible d'une clique donnée par l'algorithme de braun-kerbosch
 
-def cliques3(G:graphe):
-    l = sorted([e for e in G.nodes if len(G.edges[e]) >= 2], key=lambda x: len(G.edges[x]), reverse=True)
-    res = []
-    while l:
-        x = l[0]
-        voisins_x = G.edges[x]
-        for y in [e for e in voisins_x if e in l]:
-            voisins_y = G.edges[y]
-            voisins_communs = [e for e in voisins_x if e in voisins_y and e in l]
-            for z in voisins_communs:
-                res.append([x, y, z])
-    l.remove(x)
-    return res
+    Args:
+        graphe G:      Le graphe global
+        str list K:    liste des points de G formant une clique déja trouvée
+        bool ameliore: True si on veut la version améliorée de l'algorithme, false sinon
+
+    Return
+        str list: la liste des points de la plus grande clique trouvée
+    """
+    C = []
+    for x in G.edges[K[0]]:
+        for i in range(1, len(K)):
+            if x not in G.edges[K[i]]:
+                break
+        C.append(x)
+    if ameliore:
+        return bron_kerbosch2(G, K, C, C)
+    else:
+        return bron_kerbosch1(G, K, C)
