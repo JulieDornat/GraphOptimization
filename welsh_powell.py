@@ -10,6 +10,8 @@
 from graphe import graphe
 import time
 
+### --- WELSH-POWELL ALGORITHM --- ###
+### Hypothesis: G is a simple undirected graph
 def welsh_powell(G: graphe):
     # Retrieve the degree of each vertex in the graph
     node_degrees = {node: G.degree(node) for node in G.nodes}
@@ -24,14 +26,18 @@ def welsh_powell(G: graphe):
     current_node = sorted_nodes[0]
     color_assignment = {current_node: current_color} # Color assignment dictionary
 
+    # For each vertex in the list, assign colors
     for node in sorted_nodes[1:]:
         colored = False
         neighbors = G.edges[node]
         unauthorized_colors = []
+
+        # For each neighbor of the current node, collect their colors
         for neighbor in neighbors:
             if neighbor in color_assignment:
                 unauthorized_colors.append(color_assignment[neighbor])
 
+        # For each already colored node, check if we can assign the same color
         for colored_node in color_assignment:
             # If the node is not adjacent to a colored node and this colored node has an authorized color, we can assign the same color
             if node not in G.edges[colored_node] and color_assignment[colored_node] not in unauthorized_colors:
@@ -47,7 +53,7 @@ def welsh_powell(G: graphe):
     print("Color assignment:", color_assignment)
     return color_assignment
     
-        
+### --- VALIDATION FUNCTION --- ###
 def is_valid_coloring(G: graphe, color_assignment: dict):
     # For each node
     for node in G.nodes:
