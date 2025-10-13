@@ -70,7 +70,26 @@ def is_valid_coloring(G: graphe, color_assignment: dict):
 
 
 #### --- TEST --- ####
+# Test random graph - slide example
+print("Test slide example")
+G = graphe({"1", "2", "3", "4", "5", "6"}, {
+    "1": {"3", "4", "5","6"},
+    "2": {"4", "5", "6"},
+    "3": {"1", "5", "6"},
+    "4": {"1", "2","6"},
+    "5": {"1", "2", "3"},
+    "6": {"1", "2", "3", "4"}
+})
+
+start = time.time()
+color_assignments = welsh_powell(G)
+end = time.time()
+print("Execution time:", end - start)
+print("Is valid coloring:", is_valid_coloring(G, color_assignments))
+
+
 # Test random graph
+print("Test random graph")
 G = graphe({"A", "B", "C", "D", "E", "F", "G"}, {
     "A": {"B", "C", "D"},
     "B": {"A", "E", "F"},
@@ -89,6 +108,7 @@ print("Is valid coloring:", is_valid_coloring(G, color_assignments))
 
 
 # Test star graph
+print("Test star graph")
 G_star = graphe({"A", "B", "C", "D", "E"}, {
     "A": {"B", "C", "D", "E"},
     "B": {"A"},
@@ -103,6 +123,7 @@ print("Execution time:", end - start)
 print("Is valid coloring:", is_valid_coloring(G_star, color_assignments))
 
 # Test complete graph
+print("Test complete graph")
 G_complete = graphe({"A", "B", "C", "D"}, {
     "A": {"B", "C", "D"},
     "B": {"A", "C", "D"},
@@ -117,6 +138,7 @@ print("Execution time:", end - start)
 print("Is valid coloring:", is_valid_coloring(G_complete, color_assignments))
 
 # Test bipartite graph
+print("Test bipartite graph")
 G_bipartite = graphe({"A", "B", "C", "D", "E"}, {
     "A": {"D", "E"},
     "B": {"D", "E"},
@@ -133,6 +155,7 @@ print("Is valid coloring:", is_valid_coloring(G_bipartite, color_assignments))
 
 
 # Test cycle graph
+print("Test cycle graph")
 G_cycle = graphe({"A", "B", "C", "D"}, {
     "A": {"B", "D"},
     "B": {"A", "C"},
